@@ -5,7 +5,11 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
-# 1. Cargar el archivo CSV con pandas, interpretando 'timestamp' como fecha y hora
+
+# =========================================================================
+# PASO 1: Cargar el archivo CSV y configurar el índice
+# =========================================================================
+# Cargar el archivo CSV con pandas, interpretando 'timestamp' como fecha y hora
 df = pd.read_csv('telemetria_nodo_iot.csv', parse_dates=['timestamp'])
 
 # Establecer 'timestamp' como el índice del DataFrame
@@ -15,7 +19,10 @@ df = df.set_index('timestamp')
 print("Datos cargados exitosamente:")
 print(df.head())
 
-# 2. Calcular estadísticas descriptivas de cada variable numérica
+
+# =========================================================================
+# PASO 2: Calcular estadísticas descriptivas
+# =========================================================================
 # Seleccionamos solo las columnas numéricas para evitar errores
 columnas_numericas = df.select_dtypes(include=[np.number])
 
@@ -25,7 +32,10 @@ estadisticas = columnas_numericas.agg([np.mean, np.min, np.max, np.std])
 print("\n--- Estadísticas Descriptivas ---")
 print(estadisticas)
 
-# 3. Definir criterios de alerta con arrays de numpy e indexado booleano
+
+# =========================================================================
+# PASO 3: Definir criterios de alerta e indexado booleano
+# =========================================================================
 # Extraemos las columnas como arrays de numpy
 voltaje = df['voltaje_bateria_V'].to_numpy()
 rssi = df['rssi_dbm'].to_numpy()
@@ -51,7 +61,10 @@ print(f"Registros con al menos una alerta: {cant_alerta_cualquiera}")
 # para que sea más fácil marcar los puntos de alerta en el gráfico del próximo paso.
 df['alerta'] = alerta_cualquiera
 
-# 4. Generar visualización temporal y marcar alertas con Matplotlib
+
+# =========================================================================
+# PASO 4: Generar visualización temporal y marcar alertas
+# =========================================================================
 # Creamos la figura y el primer eje
 fig, ax1 = plt.subplots(figsize=(12, 6))
 
@@ -77,7 +90,10 @@ plt.title('Evolución de Temperatura y Voltaje de Batería del Nodo IoT')
 fig.tight_layout() # Ajusta los márgenes automáticamente
 plt.show()
 
-# 5. Agrupar los datos por día con pandas y calcular un resumen
+
+# =========================================================================
+# PASO 5: Agrupar datos por día y calcular resumen
+# =========================================================================
 resumen_diario = df.resample('D').agg(
     temperatura_promedio=('temperatura_C', 'mean'),
     temperatura_maxima=('temperatura_C', 'max'),
@@ -90,7 +106,10 @@ resumen_diario = df.resample('D').agg(
 print("\n--- Resumen Diario ---")
 print(resumen_diario)
 
-# 6. Exportar resumen diario a archivo Excel
+
+# =========================================================================
+# PASO 6: Exportar resumen diario a archivo Excel
+# =========================================================================
 nombre_archivo_excel = 'resumen_diario.xlsx'
 
 # Utilizamos to_excel para guardar el DataFrame en el archivo con la hoja solicitada
