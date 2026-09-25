@@ -89,3 +89,11 @@ resumen_diario = df.resample('D').agg(
 
 print("\n--- Resumen Diario ---")
 print(resumen_diario)
+
+# 6. Exportar resumen diario a archivo Excel
+nombre_archivo_excel = 'resumen_diario.xlsx'
+
+# Utilizamos to_excel para guardar el DataFrame en el archivo con la hoja solicitada
+resumen_diario.to_excel(nombre_archivo_excel, sheet_name='Resumen diario')
+
+print(f"\n¡Resumen exportado exitosamente a '{nombre_archivo_excel}'!")
