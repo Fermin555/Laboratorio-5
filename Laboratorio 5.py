@@ -76,3 +76,16 @@ ax2.scatter(df_alertas.index, df_alertas['voltaje_bateria_V'], color='red', s=50
 plt.title('Evolución de Temperatura y Voltaje de Batería del Nodo IoT')
 fig.tight_layout() # Ajusta los márgenes automáticamente
 plt.show()
+
+# 5. Agrupar los datos por día con pandas y calcular un resumen
+resumen_diario = df.resample('D').agg(
+    temperatura_promedio=('temperatura_C', 'mean'),
+    temperatura_maxima=('temperatura_C', 'max'),
+    temperatura_minima=('temperatura_C', 'min'),
+    voltaje_promedio=('voltaje_bateria_V', 'mean'),
+    voltaje_minimo=('voltaje_bateria_V', 'min'),
+    cantidad_alertas=('alerta', 'sum')
+).round(2)
+
+print("\n--- Resumen Diario ---")
+print(resumen_diario)
