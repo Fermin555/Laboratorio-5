@@ -50,3 +50,29 @@ print(f"Registros con al menos una alerta: {cant_alerta_cualquiera}")
 # Guardamos esta máscara booleana como una nueva columna en el DataFrame 
 # para que sea más fácil marcar los puntos de alerta en el gráfico del próximo paso.
 df['alerta'] = alerta_cualquiera
+
+# 4. Generar visualización temporal y marcar alertas con Matplotlib
+# Creamos la figura y el primer eje
+fig, ax1 = plt.subplots(figsize=(12, 6))
+
+# Graficamos la temperatura asociada al eje izquierdo
+ax1.set_xlabel('Tiempo (timestamp)')
+ax1.set_ylabel('Temperatura (°C)', color='tab:orange')
+ax1.plot(df.index, df['temperatura_C'], color='tab:orange', label='Temperatura')
+ax1.tick_params(axis='y', labelcolor='tab:orange')
+
+# Creamos un segundo eje y que comparte el mismo eje x (el tiempo)
+ax2 = ax1.twinx()
+ax2.set_ylabel('Voltaje Batería (V)', color='tab:blue')
+ax2.plot(df.index, df['voltaje_bateria_V'], color='tab:blue', label='Voltaje')
+ax2.tick_params(axis='y', labelcolor='tab:blue')
+
+# Extraemos solo las filas donde la columna 'alerta' es True
+df_alertas = df[df['alerta']]
+
+# Superponemos puntos rojos en esos instantes específicos para señalar las alertas
+ax2.scatter(df_alertas.index, df_alertas['voltaje_bateria_V'], color='red', s=50, zorder=5, label='Alerta (Bat/Señal)')
+
+plt.title('Evolución de Temperatura y Voltaje de Batería del Nodo IoT')
+fig.tight_layout() # Ajusta los márgenes automáticamente
+plt.show()
